@@ -1,10 +1,11 @@
 package sandkev.hello;
 
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Date;
 
 
 @RestController
@@ -13,7 +14,7 @@ public class HelloWorldApplication {
 
     @RequestMapping("/")
     String helloWorld() {
-        return "Hello World!";
+        return "Hello World! @" + new Date();
     }
 
     public static void main(String[] args) {
