@@ -21,3 +21,7 @@ What is the two-letter country code for this unit?
   [Unknown]:  uk
 Is CN=Kevin Sanders, OU=sandkev, O=sandkev, L=London, ST=London, C=uk correct?
   [no]:  yes
+  
+#it would be nice to add support for vue.js frontend
+https://blog.codecentric.de/en/2018/04/spring-boot-vuejs/
+https://github.com/jonashackt/spring-boot-vuejs  
