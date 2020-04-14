@@ -71,11 +71,20 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.springframework.boot:spring-boot-starter-web'
-    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation ('org.springframework.boot:spring-boot-starter-web'){
+        exclude module: 'spring-boot-starter-tomcat'
+    }
+    implementation ('org.springframework.boot:spring-boot-starter-thymeleaf'){
+        exclude module: 'spring-boot-starter-tomcat'
+    }
     implementation 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-jetty'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     //testCompile group: 'junit',  name: 'junit',  version: '4.4'
 
+    implementation 'org.springframework.boot:spring-boot-starter-security'
+//    implementation 'org.springframework.security.kerberos:spring-security-kerberos-web:1.0.1.RELEASE'
+//    implementation 'org.springframework.security.kerberos:spring-security-kerberos-client:1.0.1.RELEASE'
+//    testImplementation 'org.springframework.security.kerberos:spring-security-kerberos-test:1.0.1.RELEASE'
 
 }
