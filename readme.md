@@ -26,3 +26,10 @@ Is CN=Kevin Sanders, OU=sandkev, O=sandkev, L=London, ST=London, C=uk correct?
 https://blog.codecentric.de/en/2018/04/spring-boot-vuejs/
 https://github.com/jonashackt/spring-boot-vuejs  
 https://github.com/bezkoder/vue-upload-files/blob/master/src/components/UploadFiles.vue
+
+
+# added simple crud example from https://dev.to/brunodrugowick/spring-boot-vue-js-axios-and-thymeleaf-with-bootstrap-in-4-commits-2b0l
+# https://github.com/brunodrugowick/spring-thymeleaf-vue-crud-example 
+
+TODO: fix the ability to save roles and users from admi pages
+TODO: add unit tests

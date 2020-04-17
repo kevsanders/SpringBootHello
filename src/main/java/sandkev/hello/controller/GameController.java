@@ -14,7 +14,7 @@ public class GameController {
             Model model) {
 
         if (theChoice == null) {
-            return "index";
+            return "rock";
         }
 
         String theOutcome = "error";
