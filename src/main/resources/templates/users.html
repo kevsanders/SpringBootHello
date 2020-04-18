@@ -100,14 +100,14 @@
                 axios
                     .get("/api/v1/users")
                     .then(response => (this.users = response.data));
-                axios
+                axios.create({withCredentials: true})
                     .get("/api/v1/roles")
                     .then(response => (this.roles = response.data))
             },
             postUser: function (event) {
                 // Creating
                 if (this.user_id == '' || this.user_id == null) {
-                    axios
+                    axios.create({withCredentials: true})
                         .post("/api/v1/users", {
                             "firstName": this.user_firstName,
                             "lastName": this.user_lastName,
@@ -121,7 +121,7 @@
                             this.user_roleId = null;
                         })
                 } else { // Updating
-                    axios
+                    axios.create({withCredentials: true})
                         .post("/api/v1/users", {
                             "id": this.user_id,
                             "firstName": this.user_firstName,
@@ -146,7 +146,7 @@
                     .setAttribute("class", document.getElementById('userForm').getAttribute("class") + " show");
             },
             deleteUser: async function (user) {
-                await axios
+                await axios.create({withCredentials: true})
                     .delete("/api/v1/users/" + user.id);
                 this.getUsers();
             }

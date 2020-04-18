@@ -64,6 +64,8 @@
 <script src="webjars/axios/dist/axios.min.js"></script>
 <!-- Actual Vue.js script -->
 <script>
+    //axios.defaults.withCredentials = true;
+    //Vue.prototype.$http = axios.create({ withCredentials: true });
     var app = new Vue({
         el: '#main',
         data() {
@@ -87,7 +89,11 @@
                 if (this.role_id == '' || this.role_id == null) {
                     axios
                         .post("/api/v1/roles", {
+                            withCredentials:true,
                             "name": this.role_name,
+                            headers: {
+                                'Authorization': 'Basic ' + btoa('foo:pass')
+                            }
                         })
                         .then(savedRole => {
                             this.roles.push(savedRole.data);
@@ -95,7 +101,7 @@
                             this.role_id = '';
                         })
                 } else { // Updating
-                    axios
+                    axios.create({withCredentials: true})
                         .post("/api/v1/roles", {
                             "id": this.role_id,
                             "name": this.role_name,
@@ -114,8 +120,8 @@
                     .setAttribute("class", document.getElementById('roleForm').getAttribute("class") + " show");
             },
             deleteRole: async function (role) {
-                await axios
-                    .delete("/api/v1/roles/" + role.id);
+                await axios.create({withCredentials: true})
+                    .delete("/api/v1/roles/" + role.id, {withCredentials: true});
                 this.getRoles();
             }
         },

@@ -9,3 +9,26 @@ server:
 ##SSL Key Info
 #security:
 #  require-ssl: true
+
+management:
+  endpoints:
+    enabled-by-default=true:
+    jmx:
+      exposure:
+        include=health,info:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    info:
+      enabled=true:
+
+
+
+logging:
+  level:
+    org:
+      springframework:
+        web:
+          filter:
+            CommonsRequestLoggingFilter=DEBUG:

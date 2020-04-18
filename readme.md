@@ -31,5 +31,12 @@ https://github.com/bezkoder/vue-upload-files/blob/master/src/components/UploadFi
 # added simple crud example from https://dev.to/brunodrugowick/spring-boot-vue-js-axios-and-thymeleaf-with-bootstrap-in-4-commits-2b0l
 # https://github.com/brunodrugowick/spring-thymeleaf-vue-crud-example 
 
-TODO: fix the ability to save roles and users from admi pages
+TODO: secure the user/role admin functions
 TODO: add unit tests
+
+# test rest endpoints with curl
+curl http://localhost:8085/api/v1/roles
+curl -u foo:pass -X POST http://localhost:8085/api/v1/roles -d '{\"id\":4,\"name\":\"READ\"}' -H "Content-Type: application/json"
+curl -u foo:pass -X DELETE http://localhost:8085/api/v1/roles?id=2
+
+curl -u foo:pass -X DELETE http://localhost:8085/api/v1/roles?id=2 -H "Cookie:JSESSIONID=node012mr2zohn89qq1klqunqqjgbs21.node0"
