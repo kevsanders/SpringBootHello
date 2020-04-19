@@ -40,3 +40,12 @@ curl -u foo:pass -X POST http://localhost:8085/api/v1/roles -d '{\"id\":4,\"name
 curl -u foo:pass -X DELETE http://localhost:8085/api/v1/roles?id=2
 
 curl -u foo:pass -X DELETE http://localhost:8085/api/v1/roles?id=2 -H "Cookie:JSESSIONID=node012mr2zohn89qq1klqunqqjgbs21.node0"
+
+added unit test from example here: 
+https://www.tutorialspoint.com/spring_boot/spring_boot_rest_controller_unit_test.htm
+
+try adding axios auth headers
+https://stackoverflow.com/questions/43051291/attach-authorization-header-for-all-axios-requests?rq=1
+
+test the webpages:
+https://spring.io/guides/gs/testing-web/
