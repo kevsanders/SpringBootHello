@@ -49,3 +49,6 @@ https://stackoverflow.com/questions/43051291/attach-authorization-header-for-all
 
 test the webpages:
 https://spring.io/guides/gs/testing-web/
+
+added simple spring batch example from
+- [Introduction to Spring Batch](https://www.baeldung.com/introduction-to-spring-batch)
