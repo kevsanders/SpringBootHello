@@ -9,10 +9,15 @@ import java.time.format.DateTimeFormatter;
 
 public class RecordFieldSetMapper implements FieldSetMapper<Transaction> {
 
+    private final DateTimeFormatter formatter;
+
+    public RecordFieldSetMapper() {
+        formatter = DateTimeFormatter.ofPattern("d/M/yyy");
+    }
+
     public Transaction mapFieldSet(FieldSet fieldSet) throws BindException {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("d/M/yyy");
-
+        //Transaction.TransactionBuilder builder = Transaction.builder();
         Transaction transaction = new Transaction();
         // you can either use the indices or custom names
         // I personally prefer the custom names easy for debugging and
@@ -20,10 +25,10 @@ public class RecordFieldSetMapper implements FieldSetMapper<Transaction> {
         transaction.setUsername(fieldSet.readString("username"));
         transaction.setUserId(fieldSet.readInt("userid"));
         transaction.setAmount(fieldSet.readDouble(3));
-
-        // Converting the date
-        String dateString = fieldSet.readString(2);
-        transaction.setTransactionDate(LocalDate.parse(dateString, formatter).atStartOfDay());
+        transaction.setTransactionDate(
+                //Converting the date
+                LocalDate.parse(fieldSet.readString(2), formatter).atStartOfDay()
+        );
 
         return transaction;
 

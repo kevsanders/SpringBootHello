@@ -6,17 +6,12 @@ import org.springframework.batch.core.JobExecution;
 import org.springframework.batch.core.JobParameters;
 import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.launch.JobLauncher;
-import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import sandkev.hello.config.SpringBatchConfig;
-import sandkev.hello.config.SpringConfig;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @Controller
 @Slf4j
@@ -29,10 +24,10 @@ public class BatchController {
     @Autowired
     ApplicationContext context;
 
-    @GetMapping("/batch") ///{batchJobName}
+    @GetMapping("/batch/{batchJobName}")
     public String playGame(
-            @RequestParam(name="batchJobName", required=false)
-                    String batchJobName,
+            //@RequestParam(name="job", required=false)
+            @PathVariable String batchJobName,
             Model model) {
 
         if(batchJobName==null){
@@ -63,7 +58,9 @@ public class BatchController {
         log.info("Starting the batch job: {}", batchJobName);
         try {
             // To enable multiple execution of a job with the same parameters
-            JobParameters jobParameters = new JobParametersBuilder().addString("jobID", String.valueOf(System.currentTimeMillis()))
+            JobParameters jobParameters = new JobParametersBuilder()
+                    .addString("jobID", String.valueOf(System.currentTimeMillis()))
+                    //.addParameter("someKey", new JobParameter())
                     .toJobParameters();
             final JobExecution execution = jobLauncher.run(job, jobParameters);
             log.info("Job Status : {}", execution.getStatus());

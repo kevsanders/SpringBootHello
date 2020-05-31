@@ -38,13 +38,13 @@ public class SpringBatchConfig {
     @Autowired
     private StepBuilderFactory stepBuilderFactory;
 
-    @Value("classpath:input/record.csv")
+    @Value("classpath:batch/input/record.csv")
     private Resource inputCsv;
 
-    @Value("classpath:input/recordWithInvalidData.csv")
+    @Value("classpath:batch/input/recordWithInvalidData.csv")
     private Resource invalidInputCsv;
 
-    @Value("file:xml/output.xml")
+    @Value("file:build/xml/output.xml")
     private Resource outputXml;
 
     public ItemReader<Transaction> itemReader(Resource inputData) throws UnexpectedInputException, ParseException {
