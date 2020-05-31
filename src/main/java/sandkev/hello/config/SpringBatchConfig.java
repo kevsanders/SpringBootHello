@@ -18,17 +18,21 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.oxm.Marshaller;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+import org.springframework.stereotype.Repository;
 import sandkev.hello.batch.CustomItemProcessor;
-import sandkev.hello.batch.CustomSkipPolicy;
-import sandkev.hello.batch.MissingUsernameException;
-import sandkev.hello.batch.NegativeAmountException;
 import sandkev.hello.batch.RecordFieldSetMapper;
-import sandkev.hello.batch.SkippingItemProcessor;
 import sandkev.hello.batch.Transaction;
+import sandkev.hello.repo.TransactionRepository;
 
 import java.text.ParseException;
+import java.util.List;
+import java.util.Optional;
 
 @Configuration
 public class SpringBatchConfig {
@@ -40,9 +44,6 @@ public class SpringBatchConfig {
 
     @Value("classpath:batch/input/record.csv")
     private Resource inputCsv;
-
-    @Value("classpath:batch/input/recordWithInvalidData.csv")
-    private Resource invalidInputCsv;
 
     @Value("file:build/xml/output.xml")
     private Resource outputXml;
@@ -67,17 +68,21 @@ public class SpringBatchConfig {
     }
 
     @Bean
-    public ItemProcessor<Transaction, Transaction> skippingItemProcessor() {
-        return new SkippingItemProcessor();
+    public ItemWriter<Transaction> itemWriter() {
+        return new CustomItemWriter();
     }
+    public static class CustomItemWriter implements ItemWriter<Transaction>{
 
-    @Bean
-    public ItemWriter<Transaction> itemWriter(Marshaller marshaller) {
-        StaxEventItemWriter<Transaction> itemWriter = new StaxEventItemWriter<>();
-        itemWriter.setMarshaller(marshaller);
-        itemWriter.setRootTagName("transactionRecord");
-        itemWriter.setResource(outputXml);
-        return itemWriter;
+        @Autowired
+        TransactionRepository transactionRepository;
+
+        @Override
+        public void write(List<? extends Transaction> items) throws Exception {
+            for (Transaction item : items) {
+                transactionRepository.save(item);
+            }
+            //transactionRepository.save(items)
+        }
     }
 
     @Bean
@@ -88,7 +93,8 @@ public class SpringBatchConfig {
     }
 
     @Bean
-    protected Step step1(@Qualifier("itemProcessor") ItemProcessor<Transaction, Transaction> processor, ItemWriter<Transaction> writer) throws ParseException {
+    protected Step step1(@Qualifier("itemProcessor") ItemProcessor<Transaction, Transaction> processor,
+                         ItemWriter<Transaction> writer) throws ParseException {
         return stepBuilderFactory
                 .get("step1")
                 .<Transaction, Transaction> chunk(10)
@@ -101,52 +107,6 @@ public class SpringBatchConfig {
     @Bean(name = "firstBatchJob")
     public Job job(@Qualifier("step1") Step step1) {
         return jobBuilderFactory.get("firstBatchJob").start(step1).build();
-    }
-
-    @Bean
-    public Step skippingStep(@Qualifier("skippingItemProcessor") ItemProcessor<Transaction, Transaction> processor,
-                             ItemWriter<Transaction> writer) throws ParseException {
-        return stepBuilderFactory
-                .get("skippingStep")
-                .<Transaction, Transaction>chunk(10)
-                .reader(itemReader(invalidInputCsv))
-                .processor(processor)
-                .writer(writer)
-                .faultTolerant()
-                .skipLimit(2)
-                .skip(MissingUsernameException.class)
-                .skip(NegativeAmountException.class)
-                .build();
-    }
-
-    @Bean(name = "skippingBatchJob")
-    public Job skippingJob(@Qualifier("skippingStep") Step skippingStep) {
-        return jobBuilderFactory
-                .get("skippingBatchJob")
-                .start(skippingStep)
-                .build();
-    }
-
-    @Bean
-    public Step skipPolicyStep(@Qualifier("skippingItemProcessor") ItemProcessor<Transaction, Transaction> processor,
-                               ItemWriter<Transaction> writer) throws ParseException {
-        return stepBuilderFactory
-                .get("skipPolicyStep")
-                .<Transaction, Transaction>chunk(10)
-                .reader(itemReader(invalidInputCsv))
-                .processor(processor)
-                .writer(writer)
-                .faultTolerant()
-                .skipPolicy(new CustomSkipPolicy())
-                .build();
-    }
-
-    @Bean(name = "skipPolicyBatchJob")
-    public Job skipPolicyBatchJob(@Qualifier("skipPolicyStep") Step skipPolicyStep) {
-        return jobBuilderFactory
-                .get("skipPolicyBatchJob")
-                .start(skipPolicyStep)
-                .build();
     }
 
 }
